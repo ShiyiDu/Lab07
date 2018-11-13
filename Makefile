@@ -3,10 +3,7 @@ CFLAGS = -g -Wall -ansi -pedantic
 OBJS = lexTester.o
 INCL = lexical.h nextInputChar.h tokenStack.h doOperator.h
 
-all:	lexTester rpnCalc liblexical.a
-
-lexTester:	lexTester.o  liblexical.a
-	$(CC)  -o $@ $^ -L. -llexical
+all:	rpnCalc liblexical.a
 
 rpnCalc:	rpnCalc.o doOperator.o liblexical.a
 	$(CC)  -o $@ $^ -L. -llexical
