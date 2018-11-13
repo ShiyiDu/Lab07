@@ -20,16 +20,7 @@ static int op_eq(struct tokenStack *stack);
 static int op_mod(struct tokenStack *stack);
 static int op_if(struct tokenStack *stack);
 static int op_s(struct tokenStack *stack);
-
-/* GT (n1 n2 — gt) -push 1 if n1 > n2 and 0 otherwise
-• LT (n1 n2 — lt) -push 1 if n1 < n2 and 0 otherwise
-• GE (n1 n2 — ge) -push 1 if n1 >= n2 and 0 otherwise
-• LE (n1 n2 — le) -push 1 if n1 <= n2 and 0 otherwise
-• EQ (n1 n2 — eq) -push 1 if n1 == n2 and 0 otherwise
-• MOD (n1 - n1 n1) - push two copies of n1 onto the stack
-• IF (n1 n2 v — x) - if v is not zero then push n1 otherwise n2
-• S (—) - print all elements on the stack non destructively
-*/
+static int op_help(struct tokenStack *stack);
 
 static struct operator_struct {
   char *name;
@@ -50,6 +41,7 @@ static struct operator_struct {
   {"MOD", op_mod},
   {"IF", op_if},
   {"S", op_s},
+  {"HELP", op_help},
   {(char *)NULL, (int(*)(struct tokenStack *)) NULL}
 };
 
@@ -251,5 +243,23 @@ static int op_s(struct tokenStack *stack){
   printf("\n");
   
   free(temp);
+  return 0;
+}
+
+static int op_help(struct tokenStack *stack)
+{
+  printf("
+    - - (n1 n2 - diff)\n
+    - * (n1 n2 - product) - push n1*n2 \n
+    - / (n1 n2 - quotient) - push n1/n2 \n
+    - GT (n1 n2 — gt) -push 1 if n1 > n2 and 0 otherwise\n
+    - LT (n1 n2 — lt) -push 1 if n1 < n2 and 0 otherwise\n
+    - GE (n1 n2 — ge) -push 1 if n1 >= n2 and 0 otherwise\n
+    - LE (n1 n2 — le) -push 1 if n1 <= n2 and 0 otherwise\n
+    - EQ (n1 n2 — eq) -push 1 if n1 == n2 and 0 otherwise\n
+    - MOD (n1 - n1 n1) - push two copies of n1 onto the stack\n
+    - IF (n1 n2 v — x) - if v is not zero then push n1 otherwise n2\n
+    - S (—) - print all elements on the stack non destructively\n
+  ");
   return 0;
 }
