@@ -10,5 +10,5 @@ struct tokenStack {
 struct tokenStack *createTokenStack();
 void pushTokenStack(struct tokenStack *stack, struct lexToken *token);
 struct lexToken *popTokenStack(struct tokenStack *stack);
-int emptyTokeStack(struct tokenStack *stack);
+int emptyTokenStack(struct tokenStack *stack);
 #endif

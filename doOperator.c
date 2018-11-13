@@ -19,6 +19,7 @@ static int op_le(struct tokenStack *stack);
 static int op_eq(struct tokenStack *stack);
 static int op_mod(struct tokenStack *stack);
 static int op_if(struct tokenStack *stack);
+static int op_s(struct tokenStack *stack);
 
 /* GT (n1 n2 — gt) -push 1 if n1 > n2 and 0 otherwise
 • LT (n1 n2 — lt) -push 1 if n1 < n2 and 0 otherwise
@@ -27,9 +28,8 @@ static int op_if(struct tokenStack *stack);
 • EQ (n1 n2 — eq) -push 1 if n1 == n2 and 0 otherwise
 • MOD (n1 - n1 n1) - push two copies of n1 onto the stack
 • IF (n1 n2 v — x) - if v is not zero then push n1 otherwise n2
-• MODQUOT (n1 n2 — rem quotient) - push remainder then quotient
-• SWAP (n1 n2 — n2 n1) - swap the order of the top two elements on the stack
-• HELP (—) - print out all commands plus a line of documentation. Note: This is made easier due to the help string in the table.*/
+• S (—) - print all elements on the stack non destructively
+*/
 
 static struct operator_struct {
   char *name;
@@ -49,6 +49,7 @@ static struct operator_struct {
   {"EQ", op_eq},
   {"MOD", op_mod},
   {"IF", op_if},
+  {"S", op_s},
   {(char *)NULL, (int(*)(struct tokenStack *)) NULL}
 };
 
@@ -75,6 +76,7 @@ static int popInt(struct tokenStack *s)
   
   if(negative == 1) result = -result;
   
+  freeToken(token);
   return result;
 }
 
@@ -231,5 +233,23 @@ static int op_if(struct tokenStack *stack){
   n2 = popInt(stack);
   n1 = popInt(stack);
   pushInt(stack, v == 0 ? n2 : n1);
+  return 0;
+}
+
+static int op_s(struct tokenStack *stack){
+  struct tokenStack *temp = createTokenStack();
+  
+  while(!emptyTokenStack(stack))
+    pushTokenStack(temp, popTokenStack(stack));
+  
+  printf("all tokens: \n");
+  while (!emptyTokenStack(temp)) {
+    struct lexToken *t = popTokenStack(temp);
+    printToken(stdout, t);
+    pushTokenStack(stack, t);
+  }
+  printf("\n");
+  
+  free(temp);
   return 0;
 }
